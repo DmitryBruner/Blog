@@ -2,8 +2,10 @@ from flask import Flask, render_template, request, redirect, url_for
 from werkzeug.security import generate_password_hash
 from model import Post, Users
 from config import *
-from forms import LoginForm
+#from forms import LoginForm
+from flask_login import login_required
 
+@login_required
 @app.route('/index')
 @app.route('/')
 def index():
@@ -13,9 +15,6 @@ def index():
 @app.route('/posts')
 def posts():
     posts = Post.query.all()
-    for p in posts:
-        print(p)
-
     return render_template('posts.html', posts=posts)
 
 
@@ -49,8 +48,10 @@ def about():
 
 
 
-@app.route('/login')
+@app.route('/login', method=['POST'])
 def login():
+    if request.method == 'POST':
+
     return render_template('login.html')
 
 

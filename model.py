@@ -1,4 +1,5 @@
-from config import db
+from config import db, login_manager
+from flask_login import UserMixin
 
 
 class Post(db.Model):
@@ -11,7 +12,12 @@ class Post(db.Model):
         return f'<Post{self.id}>'
 
 
-class Users(db.Model):
+@login_manager.user_loader
+def load_user(user_id):
+    return db.session.query(Users).get(user_id)
+
+
+class Users(db.Model, UserMixin):
     # __tablename__ = 'users' #maybe wrong
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(140), nullable=False)
